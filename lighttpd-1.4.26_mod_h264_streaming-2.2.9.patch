@@ -376,9 +376,9 @@ diff -Naur ../lighttpd-1.4.26.orig/src/mod_h264_streaming.c ./src/mod_h264_strea
 +              {
 +              case BUCKET_TYPE_MEMORY:
 +              {
-+                buffer* b = chunkqueue_get_append_buffer(con->write_queue);
-+                buffer_append_memory(b, bucket->buf_, bucket->size_);
-+                b->used++; /* add virtual \0 */
++               http_chunk_append_mem(srv, con, bucket->buf_,bucket->size_);
++                
++             
 +              }
 +                break;
 +              case BUCKET_TYPE_FILE:
