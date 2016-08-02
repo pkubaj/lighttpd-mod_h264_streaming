@@ -383,8 +383,7 @@ diff -Naur ../lighttpd-1.4.26.orig/src/mod_h264_streaming.c ./src/mod_h264_strea
 +                break;
 +              case BUCKET_TYPE_FILE:
 +              http_chunk_append_file_range(srv, con, con->physical.path,bucket->offset_, bucket->size_) ;
-+               // http_chunk_append_file(srv, con, con->physical.path);
-+                break;
++              break;
 +              }
 +              content_length += bucket->size_;
 +              bucket = bucket->next_;
@@ -397,7 +396,7 @@ diff -Naur ../lighttpd-1.4.26.orig/src/mod_h264_streaming.c ./src/mod_h264_strea
 +      // ETag header
 +      {
 +        buffer *etag = buffer_init_buffer(sce->etag);
-+        buffer_append_off_t(etag, content_length);
++        buffer_append_int(etag, content_length);
 +        etag_mutate(con->physical.etag, etag);
 +        response_header_overwrite(srv, con, CONST_STR_LEN("ETag"),
 +                                  CONST_BUF_LEN(con->physical.etag));
