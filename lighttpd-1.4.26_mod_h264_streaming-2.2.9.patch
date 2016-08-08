@@ -54,7 +54,7 @@ diff -Naur ../lighttpd-1.4.26.orig/src/mod_h264_streaming.c ./src/mod_h264_strea
 +
 + mod_h264_streaming - A lighttpd plugin for pseudo-streaming Quicktime/MPEG4 files.
 +
-+ Copyright (C) 2007-2009 CodeShop B.V.
++ Copyright (C) 2007-2009 CodeShop B.V
 +
 + Licensing
 + The Streaming Module is licened under a Creative Commons License. It
@@ -382,7 +382,7 @@ diff -Naur ../lighttpd-1.4.26.orig/src/mod_h264_streaming.c ./src/mod_h264_strea
 +              }
 +                break;
 +              case BUCKET_TYPE_FILE:
-+              http_chunk_append_file_range(srv, con, con->physical.path,bucket->offset_, bucket->size_) ;
++              http_chunk_append_file(srv, con, con->physical.path) ;
 +              break;
 +              }
 +              content_length += bucket->size_;
