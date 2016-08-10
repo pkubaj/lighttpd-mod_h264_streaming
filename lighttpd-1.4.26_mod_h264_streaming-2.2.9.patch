@@ -376,13 +376,17 @@ diff -Naur ../lighttpd-1.4.26.orig/src/mod_h264_streaming.c ./src/mod_h264_strea
 +              {
 +              case BUCKET_TYPE_MEMORY:
 +              {
-+               http_chunk_append_mem(srv, con, bucket->buf_,bucket->size_);
++               http_chunk_append_mem(srv, con, bucket->buf_, bucket->size_);
 +                
 +             
 +              }
 +                break;
 +              case BUCKET_TYPE_FILE:
+<<<<<<< 3fb5ea8dd93d1ccc308f88d05f00afdd754e10c6
 +              http_chunk_append_file(srv, con, con->physical.path) ;
+=======
++              http_chunk_append_file_range(srv, con, con->physical.path, bucket->offset_, bucket->size_) ;
+>>>>>>> test
 +              break;
 +              }
 +              content_length += bucket->size_;
