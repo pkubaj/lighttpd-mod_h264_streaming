@@ -54,7 +54,7 @@ diff -Naur ../lighttpd-1.4.26.orig/src/mod_h264_streaming.c ./src/mod_h264_strea
 +
 + mod_h264_streaming - A lighttpd plugin for pseudo-streaming Quicktime/MPEG4 files.
 +
-+ Copyright (C) 2007-2009 CodeShop B.V.
++ Copyright (C) 2007-2009 CodeShop B.V
 +
 + Licensing
 + The Streaming Module is licened under a Creative Commons License. It
@@ -287,13 +287,14 @@ diff -Naur ../lighttpd-1.4.26.orig/src/mod_h264_streaming.c ./src/mod_h264_strea
 +
 +URIHANDLER_FUNC(mod_h264_streaming_path_handler) {
 +  plugin_data *p = p_d;
-+  int s_len;
++  size_t s_len;
 +  size_t k;
 +  handler_ctx *hctx;
 +
 +  UNUSED(srv);
 +
-+  if (buffer_is_empty(con->physical.path)) return HANDLER_GO_ON;
++  s_len = buffer_string_length(con->physical.path);
++  if (0 == s_len) return HANDLER_GO_ON;
 +
 +  mod_h264_streaming_patch_connection(srv, con, p);
 +
@@ -304,14 +305,13 @@ diff -Naur ../lighttpd-1.4.26.orig/src/mod_h264_streaming.c ./src/mod_h264_strea
 +    con->plugin_ctx[p->id] = hctx;
 +  }
 +
-+  s_len = con->physical.path->used - 1;
 +
 +  for (k = 0; k < p->conf.extensions->used; k++) {
 +    data_string *ds = (data_string *)p->conf.extensions->data[k];
-+    int ct_len = ds->value->used - 1;
++    size_t ct_len = buffer_string_length(ds->value);
 +
 +    if (ct_len > s_len) continue;
-+    if (ds->value->used == 0) continue;
++    if (ct_len == 0) continue;
 +
 +    if (0 == strncmp(con->physical.path->ptr + s_len - ct_len, ds->value->ptr, ct_len)) {
 +      buffer *mtime;
@@ -376,14 +376,18 @@ diff -Naur ../lighttpd-1.4.26.orig/src/mod_h264_streaming.c ./src/mod_h264_strea
 +              {
 +              case BUCKET_TYPE_MEMORY:
 +              {
-+                buffer* b = chunkqueue_get_append_buffer(con->write_queue);
-+                buffer_append_memory(b, bucket->buf_, bucket->size_);
-+                b->used++; /* add virtual \0 */
++               http_chunk_append_mem(srv, con, bucket->buf_, bucket->size_);
++                
++             
 +              }
 +                break;
 +              case BUCKET_TYPE_FILE:
-+                http_chunk_append_file(srv, con, con->physical.path);
-+                break;
+<<<<<<< 3fb5ea8dd93d1ccc308f88d05f00afdd754e10c6
++              http_chunk_append_file(srv, con, con->physical.path) ;
+=======
++              http_chunk_append_file_range(srv, con, con->physical.path, bucket->offset_, bucket->size_) ;
+>>>>>>> test
++              break;
 +              }
 +              content_length += bucket->size_;
 +              bucket = bucket->next_;
@@ -396,7 +400,7 @@ diff -Naur ../lighttpd-1.4.26.orig/src/mod_h264_streaming.c ./src/mod_h264_strea
 +      // ETag header
 +      {
 +        buffer *etag = buffer_init_buffer(sce->etag);
-+        buffer_append_off_t(etag, content_length);
++        buffer_append_int(etag, content_length);
 +        etag_mutate(con->physical.etag, etag);
 +        response_header_overwrite(srv, con, CONST_STR_LEN("ETag"),
 +                                  CONST_BUF_LEN(con->physical.etag));
