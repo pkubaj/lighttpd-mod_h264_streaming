@@ -16,17 +16,16 @@ diff -Naur ../lighttpd-1.4.26.orig/COPYING_H264 ./COPYING_H264
 diff -Naur ../lighttpd-1.4.26.orig/configure.ac ./configure.ac
 --- ../lighttpd-1.4.26.orig/configure.ac	2010-06-03 15:35:40.444162823 +0200
 +++ ./configure.ac	2010-06-03 15:36:00.856292023 +0200
---- configure.ac.orig	2017-10-22 22:09:57.000000000 +0200
-+++ configure.ac	2017-10-23 14:31:37.171207000 +0200
-@@ -1015,6 +1015,7 @@
-
- do_build="mod_cgi mod_fastcgi mod_extforward mod_proxy mod_evhost mod_simple_vhost mod_access mod_alias mod_setenv mod_usertrack mod_auth mod_authn_file mod_status mod_accesslog"
- do_build="$do_build mod_rrdtool mod_secdownload mod_expire mod_compress mod_dirlisting mod_indexfile mod_userdir mod_webdav mod_staticfile mod_scgi mod_flv_streaming mod_ssi mod_deflate"
- do_build="$do_build mod_vhostdb mod_wstunnel"
-+do_build="$do_build mod_h264_streaming"
-
- plugins="mod_rewrite mod_redirect mod_trigger_b4_dl"
- features="regex-conditionals"
+--- configure.ac.orig	2017-11-14 20:17:06.307829000 +0100
++++ configure.ac	2017-11-14 20:19:54.680667000 +0100
+@@ -1341,6 +1341,7 @@
+   mod_vhostdb \
+   mod_webdav \
+   mod_wstunnel \
++  mod_h264_streaming \
+ "
+ 
+ lighty_track_feature() {
 diff -Naur ../lighttpd-1.4.26.orig/src/Makefile.am ./src/Makefile.am
 --- ../lighttpd-1.4.26.orig/src/Makefile.am	2010-06-03 15:35:40.440146694 +0200
 +++ ./src/Makefile.am	2010-06-03 15:36:00.856292023 +0200
